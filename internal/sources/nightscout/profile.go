@@ -107,7 +107,7 @@ func (n *Nightscout) fetchProfile(timeRange types.TimeRange) (*profile.Profile, 
 			highValuesByTime[e.TimeAsSeconds] = e.Value
 		}
 
-		for t, _ := range lowValuesByTime {
+		for t := range lowValuesByTime {
 			targets = append(targets, &profile.GlucoseTarget{
 				StartsAtSeconds: t,
 				LowerBound:      lowValuesByTime[t],
