@@ -10,7 +10,6 @@ const (
 	CarbCorrection
 	TemporaryOverride // Loop e.g. "Temporary Override 🏋️‍♂️ Lifting 130% 7 - 8"
 	TemporaryTarget   // Trio "Custom Target"
-	SiteChange
 	Bolus
 	InsulinChange
 	Note
