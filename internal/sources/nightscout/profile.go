@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"maps"
 	"slices"
 	"time"
 	"zgluco/internal/models"
@@ -119,7 +118,11 @@ func (n *Nightscout) fetchProfile(timeRange types.TimeRange) (*profile.Profile, 
 	}
 
 	if len(unknownUploaders) > 0 {
-		uploaders := slices.Sorted(maps.Keys(unknownUploaders))
+		uploaders := make([]string, 0, len(unknownUploaders))
+		for k := range unknownUploaders {
+			uploaders = append(uploaders, k)
+		}
+		slices.Sort(uploaders)
 		fmt.Printf("WARN: Found the following unknown uploaders %v\n", uploaders)
 		fmt.Printf("Cannot guarantee proper parsing. Please open an issue with an example to ensure proper support.\n")
 	}
