@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Build binaries
+        run: |
+          mkdir -p dist
+          for platform in linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64; do
+            GOOS=${platform%/*}
+            GOARCH=${platform#*/}
+            for bin in zgluco sgv treatments profile; do
+              out="dist/${bin}-${GOOS}-${GOARCH}"
+              [ "$GOOS" = "windows" ] && out="${out}.exe"
+              GOOS=$GOOS GOARCH=$GOARCH go build -o "$out" "./cmd/${bin}"
+            done
+          done
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
